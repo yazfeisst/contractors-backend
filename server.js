@@ -27,6 +27,8 @@ app.use(cors({
 //use json with express
 app.use(express.json());
 
+app.options('*', cors());
+
 //log out the path and method of each request
 app.use((req, res, next) => {
     console.log(req.path, req.method);
