@@ -19,8 +19,9 @@ const port = 4000;
 //allow cross origin
 
 app.use(cors({ 
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
-  allowedHeaders: ['Content-Type', 'Authorization'] 
+    origin: 'https://contractors-frontend.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
+    credentials: true
 }));
 
 //use json with express
