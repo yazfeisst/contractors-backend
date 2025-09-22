@@ -1,70 +1,49 @@
-//imports
-
-//node package imports
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const entryRoutes = require('./routes/entry');
 
-// route imports
-const entryRoutes = require('./routes/entry')
-
-
-//set variable of app to run express method
 const app = express();
+const port = process.env.PORT || 4000;
 
-//set port
-const port = 4000;
-
-//allow cross origin
-
-app.use(cors({ 
-    origin: 'https://contractors-frontend.vercel.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
-    credentials: true
+// CORS
+app.use(cors({
+  origin: 'https://contractors-frontend.vercel.app',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 
-//use json with express
+// JSON parser
 app.use(express.json());
 
-app.options('*', cors());
-
-//log out the path and method of each request
+// Log requests
 app.use((req, res, next) => {
-    console.log(req.path, req.method);
-    next();
+  console.log(req.path, req.method);
+  next();
 });
 
-//attach routes to the app
-app.use('/api/entries/', entryRoutes);
+// Routes
+app.use('/api/entries', entryRoutes);
 
-
-//home route for backend
+// Home route
 app.get('/', (req, res) => {
-    res.send('Express Server Running');
+  res.send('Express Server Running');
 });
 
-//listen to changes
-app.listen(port, () => {
-    console.log(`Express Server running on http://localhost:${port}`)
-});
-
+// Serve static files
 app.use('/public', express.static('public'));
 
-//MONGO CONNECTION
-//mongo username and password
-const mongoUsername = process.env.MONGODB_USERNAME
-const mongoPassword = process.env.MONGODB_PASSWORD
+// MongoDB connection
+const mongoUsername = process.env.MONGODB_USERNAME;
+const mongoPassword = process.env.MONGODB_PASSWORD;
 
-//mongo uri
-const mongoURI = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0.p3cmelg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+const mongoURI = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0.p3cmelg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-
-//connect to mongo
 mongoose.connect(mongoURI)
-    .then(() => {
-        console.log('Connected to MongoDB Atlas');
-    })
-    .catch((err) => {
-        console.log('Error connection to MongoDB Atlas');
-    });
+  .then(() => console.log('Connected to MongoDB Atlas'))
+  .catch(err => console.log('Error connecting to MongoDB Atlas', err));
+
+// Listen
+app.listen(port, () => console.log(`Express Server running on http://localhost:${port}`));
