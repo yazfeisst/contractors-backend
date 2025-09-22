@@ -1,12 +1,5 @@
-
-const { response } = require('express')
-
-
 const Entry = require('../models/entryModel')
-
-
 const mongoose = require('mongoose')
-
 
 const getEntries = async (req, res) => {
     try {
@@ -18,19 +11,18 @@ const getEntries = async (req, res) => {
     }
 }
 
-
 const getEntry = async (req, res) => {
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ error: 'No such Entry: Invalid Id' });
+        return res.status(404).json({ error: 'No such entry: Invalid Id' });
     }
 
     try {
-        const entry = await Listing.findById(id);
+        const entry = await Entry.findById(id);
 
         if (!entry) {
-            return res.status(404).json({ error: 'No such Entry, Entry does not exist' });
+            return res.status(404).json({ error: 'No such entry, Entry does not exist' });
         }
 
         res.status(200).json(entry);
@@ -40,7 +32,6 @@ const getEntry = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 
 const createEntry = async (req, res) => {
     const { 
@@ -67,19 +58,18 @@ const createEntry = async (req, res) => {
             initials,
             comments
         })
-        res.status(200).json(entry)
+        res.status(201).json(entry)
 
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 }
 
-
 const updateEntry = async (req, res) => {
     const { id } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({ error: 'No such entry'})
+        return res.status(404).json({ error: 'No such entry' })
     }
 
     const entry = await Entry.findByIdAndUpdate(
