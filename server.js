@@ -17,7 +17,11 @@ const app = express();
 const port = 4000;
 
 //allow cross origin
-app.use(cors());
+
+app.use(cors({ 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
+  allowedHeaders: ['Content-Type', 'Authorization'] 
+}));
 
 //use json with express
 app.use(express.json());
